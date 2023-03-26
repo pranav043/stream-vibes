@@ -12,8 +12,6 @@ const SearchBar = () => {
 
     if (searchTerm) {
       navigate(`/search/${searchTerm}`);
-
-      setSearchTerm('');
     }
   };
 
@@ -31,6 +29,7 @@ const SearchBar = () => {
     >
       <input
         className='search-bar'
+        type='text'
         placeholder='Search...'
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
