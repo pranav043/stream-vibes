@@ -11,16 +11,20 @@ const Feed = () => {
   useEffect(() => {
     setVideos(null);
 
-    fetchFromAPI(`search?part=snippet&q=${selectedCategory}`)
-      .then((data) => setVideos(data.items))
-    }, [selectedCategory]);
+    fetchFromAPI(`search?part=snippet&q=${selectedCategory}`).then((data) => setVideos(data.items));
+  }, [selectedCategory]);
 
   return (
     <Stack sx={{ flexDirection: { xs: "column", md: "row" } }}>
-      <Box sx={{ height: { xs: "auto", md: "92vh" }, borderRight: "1px solid #3d3d3d", px: { xs: 0, md: 2 } }}>
+      <Box
+        sx={{
+          height: { xs: "auto", md: "92vh" },
+          borderRight: "1px solid #3d3d3d",
+          px: { xs: 0, md: 2 },
+        }}>
         <Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
-        
-        <Typography className="copyright" variant="body2" sx={{ mt: 1.5, color: "#fff", }}>
+
+        <Typography className="copyright" variant="body2" sx={{ mt: 1.5, color: "#fff" }}>
           Copyright © 2023 Pranav Gupta
         </Typography>
       </Box>
