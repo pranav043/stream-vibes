@@ -1,18 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Stack, Typography } from "@mui/material";
-
 import { fetchFromAPI } from "../utils/fetchFromAPI";
-import { Videos, Sidebar } from ".";
+import { Videos, Sidebar, Loader } from ".";
 
 const Feed = () => {
   const [selectedCategory, setSelectedCategory] = useState("New");
   const [videos, setVideos] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const counterRef = useRef(0);
+  const delayTime = 500;
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
-    setVideos(null);
+    counterRef.current += 1;
+    const currentCounter = counterRef.current;
 
-    fetchFromAPI(`search?part=snippet&q=${selectedCategory}`).then((data) => setVideos(data.items));
-  }, [selectedCategory]);
+    setLoading(true);
+
+    clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchFromAPI(`search?part=snippet&q=${selectedCategory}`);
+
+          if (currentCounter === counterRef.current) {
+            setVideos(data.items);
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }, delayTime);
+
+    return () => {
+      counterRef.current += 1;
+      clearTimeout(timeoutRef.current);
+    };
+  }, [selectedCategory, delayTime, counterRef]);
 
   return (
     <Stack sx={{ flexDirection: { xs: "column", md: "row" } }}>
@@ -34,7 +63,7 @@ const Feed = () => {
           {selectedCategory} <span style={{ color: "#FC1503" }}>videos</span>
         </Typography>
 
-        <Videos videos={videos} />
+        {loading ? <Loader /> : <Videos videos={videos} />}
       </Box>
     </Stack>
   );

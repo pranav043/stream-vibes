@@ -10,6 +10,10 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }) => (
       overflowY: "auto",
       height: { xs: "auto", md: "95%" },
       flexDirection: { md: "column" },
+      "&::-webkit-scrollbar": {
+        width: "10px",
+        height: "5px",
+      },
     }}>
     {categories.map((category) => (
       <button
